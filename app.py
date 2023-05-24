@@ -26,6 +26,8 @@ def get_workspaces(client):
         except Exception as e:
             print(e)
             throttle = True
+            if "ExpiredToken" in str(e):
+                exit()
     while True:
         for workspace in res_workspaces["Workspaces"]:
             _all_workspaces.append(
@@ -145,7 +147,9 @@ def get_user():
         exit()
         
 def get_workspaces_list(client):
+
     workspaces = get_workspaces(client)
+
     clear()
     for workspace in workspaces:
         pp.pprint("Workspace User: {}".format(workspace['UserName']))
