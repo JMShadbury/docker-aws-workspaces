@@ -101,7 +101,8 @@ def get_client_profile():
                 clear()
                 print(e)
                 print("\n\n")
-                time.sleep(1)
+                time.sleep(2)
+    return client
 
 def get_user():
 
@@ -109,9 +110,7 @@ def get_user():
         client = get_client_profile()
     else:
         client = args.profile
-
-
-
+    client = get_workspaces_client(client, args.region)
 
     # IF User ID is stil required
     user_id = ""
@@ -126,8 +125,7 @@ def get_user():
         user_id = args.argument
 
     
-    workspaces = get_workspaces(workspaces_client)
-    count = 0
+    workspaces = get_workspaces(client)
     ws = ""
     for workspace in workspaces:
         if workspace['UserName'] in user_id:
@@ -141,7 +139,6 @@ def get_user():
     else:
         clear()
         print("User Not Found")
-        print(count)
         exit()
         
 def get_workspaces_list(client):
