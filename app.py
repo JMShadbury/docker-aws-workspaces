@@ -84,7 +84,6 @@ def get_client_profile():
     client = ""
 
     while True:
-        clear()
         print("Client Profile Required")
         print("-----------------------\n")
         print("Please enter Client Profile")
@@ -95,9 +94,14 @@ def get_client_profile():
         if client == "4":
             menu()
         elif client:
-            break 
-
-    return client
+            try:
+                get_workspaces_client(client, args.region)
+                break
+            except Exception as e:
+                clear()
+                print(e)
+                print("\n\n")
+                time.sleep(1)
 
 def get_user():
 
@@ -106,16 +110,7 @@ def get_user():
     else:
         client = args.profile
 
-    # Test Connection to the client
-    workspaces_client = client
-    while True:
-        try:
-            workspaces_client = get_workspaces_client(client, args.region)
-            break
-        except Exception as e:
-            print(e)
-            time.sleep(1)
-            client = get_client_profile()
+
 
 
     # IF User ID is stil required
