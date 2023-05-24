@@ -82,6 +82,7 @@ def restart_workspace(client, ws_id):
 def get_client_profile():
 
     client = ""
+    clear()
 
     while True:
         print("Client Profile Required")
@@ -102,6 +103,8 @@ def get_client_profile():
                 print(e)
                 print("\n\n")
                 time.sleep(2)
+        else:
+            clear()
     return client
 
 def get_user():
