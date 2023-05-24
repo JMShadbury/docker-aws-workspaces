@@ -118,7 +118,7 @@ def get_user():
         while True:
             if not args.argument:
                 clear()
-                user_id = input("Enter User ID:")
+                user_id = input("Enter User ID:  ")
             if user_id:
                 break
     else:
