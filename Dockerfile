@@ -5,4 +5,6 @@ RUN apt install python3 pip -y
 RUN pip install boto3
 WORKDIR /app
 COPY app.py .
+COPY client_functions.py .
+COPY workspaces_functions.py .
 ENTRYPOINT ["python", "app.py"]
