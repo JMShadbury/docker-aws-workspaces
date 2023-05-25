@@ -1,5 +1,7 @@
 import boto3
 
+
+
 # Gets the workspaces client
 def get_workspaces_client(profile, region):
     """
