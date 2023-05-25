@@ -58,7 +58,6 @@ def get_workspaces(client):
 
 
 
-
 def get_workspaces_client(profile, region):
     """
     Connect to AWS APIs
