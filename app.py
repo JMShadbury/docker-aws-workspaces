@@ -1,8 +1,7 @@
 import argparse
 import sys
-import pprint
-import workspaces_functions
-import client_functions
+import menu
+import functions
 
 
 if __name__ == "__main__":
@@ -43,18 +42,16 @@ if __name__ == "__main__":
     # initialize variables
     args = parser.parse_args(sys.argv[1:])
 
-    # get workspaces client
-    client = workspaces_functions.get_workspaces_client(args.profile, args.region)
-
 
     # If the -c is provided with "list_workspaces"
     if args.command == "list_workspaces":
-        client_functions.get_workspaces_list()
+        functions.get_workspaces_list(args.profile)
 
     # If the -c is provided with "get_user"
     if args.command == "get_user":
-        client_functions.get_user(args.argument)
+        functions.get_user(args.profile,args.region,args.argument)
+        exit()
 
 
     #display menu
-    client_functions.menu()
+    menu.menu(args.profile,args.region, args.argument)
