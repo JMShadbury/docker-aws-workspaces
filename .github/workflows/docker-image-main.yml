@@ -20,4 +20,4 @@ jobs:
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag joelhutson/workspaces:latest
     - name: Push the docker image
-      run: docker push joelhutson/workspaces:dev
+      run: docker push joelhutson/workspaces:latest
