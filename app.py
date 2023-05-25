@@ -43,13 +43,10 @@ if __name__ == "__main__":
     # initialize variables
     args = parser.parse_args(sys.argv[1:])
 
-    # get workspaces client
-    client = workspaces_functions.get_workspaces_client(args.profile, args.region)
-
 
     # If the -c is provided with "list_workspaces"
     if args.command == "list_workspaces":
-        client_functions.get_workspaces_list()
+        client_functions.get_workspaces_list(args.profile)
 
     # If the -c is provided with "get_user"
     if args.command == "get_user":
@@ -57,4 +54,4 @@ if __name__ == "__main__":
 
 
     #display menu
-    client_functions.menu()
+    client_functions.menu(args.profile,args.region, args.argument)

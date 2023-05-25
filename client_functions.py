@@ -8,7 +8,7 @@ pp = pprint.PrettyPrinter(width=41, compact=True)
 
 
 # Function to display the menu
-def menu():
+def menu(client_profile,region, user_id):
     menu = {}
     clear()
     menu[1]="1 - List Workspaces" 
@@ -20,11 +20,11 @@ def menu():
         print(value)
     selection= input("Please Select:") 
     if selection == "1":
-        client = get_client_profile()
-        workspaces_client = workspaces_functions.get_workspaces_client(client, "ap-southeast-2")
+        customer = get_client_profile(client_profile)
+        workspaces_client = workspaces_functions.get_workspaces_client(customer, region)
         get_workspaces_list(workspaces_client)
     if selection == "2":
-        get_user()
+        get_user(client_profile, region, user_id)
     if selection == "3":
         print("This is currently not in use")
         exit()
@@ -32,32 +32,32 @@ def menu():
         exit()
 
 # Function to get the client profile to be used in the app
-def get_client_profile():
+def get_client_profile(client_profile):
 
-    client = ""
+    client = client_profile
     clear()
-
-    while True:
-        print("Client Profile Required")
-        print("-----------------------\n")
-        print("Please enter Client Profile")
-        print("A client profile is required so the app knows what aws account to use.")
-        print("Example: runcmd-test")
-        print("\ntype 4 to exit...")
-        client = input("Enter Client Profile:   ")
-        if client == "4":
-            menu()
-        elif client:
-            try:
-                workspaces_functions.get_workspaces_client(client, "ap-southeast-2")
-                break
-            except Exception as e:
+    if not client:
+        while True:
+            print("Client Profile Required")
+            print("-----------------------\n")
+            print("Please enter Client Profile")
+            print("A client profile is required so the app knows what aws account to use.")
+            print("Example: runcmd-test")
+            print("\ntype 4 to exit...")
+            client = input("Enter Client Profile:   ")
+            if client == "4":
+                menu()
+            elif client:
+                try:
+                    workspaces_functions.get_workspaces_client(client, "ap-southeast-2")
+                    break
+                except Exception as e:
+                    clear()
+                    print(e)
+                    print("\n\n")
+                    time.sleep(2)
+            else:
                 clear()
-                print(e)
-                print("\n\n")
-                time.sleep(2)
-        else:
-            clear()
     return client
 
 
@@ -73,14 +73,18 @@ def get_workspaces_list(client):
 
 
 # Function to search for user
-def get_user():
+def get_user(client_profile,region, user_id):
 
-    client_profile = get_client_profile()
+    client = client_profile
 
-    client = workspaces_functions.get_workspaces_client(client_profile, "ap-southeast-2")
+    if not client:
+        client_profile = get_client_profile(client)
+
+    client = workspaces_functions.get_workspaces_client(client_profile, region)
 
     clear()
-    user_id = input("Enter User ID:  ")
+    if not user_id:
+        user_id = input("Enter User ID:  ")
     
     workspaces = workspaces_functions.get_workspaces(client)
     ws = ""
