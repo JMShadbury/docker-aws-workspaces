@@ -50,7 +50,8 @@ if __name__ == "__main__":
 
     # If the -c is provided with "get_user"
     if args.command == "get_user":
-        client_functions.get_user(args.argument)
+        client_functions.get_user(args.profile,args.region,args.argument)
+        exit()
 
 
     #display menu
