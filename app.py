@@ -182,6 +182,8 @@ def menu():
 
 if __name__ == "__main__":
 
+    # Arguments provided to the app
+
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "-p",
@@ -213,13 +215,15 @@ if __name__ == "__main__":
     )
 
 
+    # initialize variables
     args = parser.parse_args(sys.argv[1:])
     pp = pprint.PrettyPrinter(width=41, compact=True)
 
+    # get workspaces client
     client = get_workspaces_client(args.profile, args.region)
 
-    menu()
 
+    # If the -c is provided with "list_workspaces"
     if args.command == "list_workspaces":
         workspaces = get_workspaces(client)
 
@@ -235,6 +239,7 @@ if __name__ == "__main__":
         print(clean)
         print("total workspaces: {}".format(len(workspaces)))
 
+    # If the -c is provided with "get_user"
     if args.command == "get_user":
         if not args.argument:
             print("ERROR: -a needs to be defined to search for a user \nExample: workspaces -p stockland-prod -c get_user -a a_joelh")
@@ -253,6 +258,8 @@ if __name__ == "__main__":
             else:
                 print("User Not Found")
 
+                
+    # If the -c is provided with "restart_workspaces"
     if args.command == "restart_workspace":
         if not args.argument:
             print("ERROR: -a needs to be defined to search for a user's workspace to reboot \nExample: workspaces -p stockland-prod -c restart_workspace -a a_joelh")
@@ -287,3 +294,7 @@ if __name__ == "__main__":
                 
 
             print(response)
+
+
+    #display menu
+    menu()
