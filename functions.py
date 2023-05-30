@@ -67,7 +67,8 @@ def get_workspaces(client):
                     "RunningMode": workspace["WorkspaceProperties"]["RunningMode"],
                     "ComputeTypeName": workspace["WorkspaceProperties"][
                         "ComputeTypeName"
-                    ]
+                    ],
+                    "State" : workspace['State']
                 }
             )
         if "NextToken" not in res_workspaces:
@@ -198,6 +199,7 @@ def get_user(client_profile,region, user_id):
             ws += "Username:     {}\n".format(workspace['UserName'])
             ws += "ComputerName: {}\n".format(workspace['ComputerName'])
             ws += "DirectoryId:  {}\n".format(workspace['DirectoryId'])
+            ws += "State:        {}\n".format(workspace['State'])
 
     # If a workspace was found, print the details
     if ws:
