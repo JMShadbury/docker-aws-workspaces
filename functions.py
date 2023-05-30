@@ -200,6 +200,7 @@ def get_user(client_profile,region, user_id):
             ws += "ComputerName: {}\n".format(workspace['ComputerName'])
             ws += "DirectoryId:  {}\n".format(workspace['DirectoryId'])
             ws += "State:        {}\n".format(workspace['State'])
+            ws += "----------------------"
 
     # If a workspace was found, print the details
     if ws:
