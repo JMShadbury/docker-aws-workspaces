@@ -54,6 +54,8 @@ def get_workspaces(client):
             throttle = True
             if "ExpiredToken" in str(e):
                 exit()
+            elif "AccessDenied" in str(e):
+                exit()
 
     # Profile a list of workspaces and include selected attributes below
     while True:
