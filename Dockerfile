@@ -6,5 +6,5 @@ RUN pip install boto3 wheel
 WORKDIR /app
 COPY app.py .
 COPY menu.py .
-COPY functions.py .
+COPY workspace_functions.py .
 ENTRYPOINT ["python", "app.py"]
