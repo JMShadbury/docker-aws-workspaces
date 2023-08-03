@@ -45,11 +45,11 @@ if __name__ == "__main__":
 
     # If the -c is provided with "list_workspaces"
     if args.command == "list_workspaces":
-        functions.get_workspaces_list(args.profile)
+        workspace_functions.get_workspaces_list(args.profile)
 
     # If the -c is provided with "get_user"
     if args.command == "get_user":
-        functions.get_user(args.profile,args.region,args.argument)
+        workspace_functions.get_user(args.profile,args.region,args.argument)
         exit()
 
 
