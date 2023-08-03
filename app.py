@@ -1,7 +1,7 @@
 import argparse
 import sys
 import menu
-import functions
+import workspace_functions
 
 
 if __name__ == "__main__":
