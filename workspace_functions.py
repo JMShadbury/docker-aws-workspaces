@@ -7,10 +7,92 @@ import boto3
 clear = lambda: os.system('clear')
 pp = pprint.PrettyPrinter(width=41, compact=True)
 
+# Get a report of all workspaces, the report will provide a list of alwayson vs auto stop workspaces and the cost of upgrading them to a different compute type
+def report(client_profile, region):
+    '''
+    This function will get a report of all workspaces, the report will provide a list of alwayson vs auto stop workspaces and the cost of upgrading them to a different compute type
+    :param client_profile: the client profile to use
+    :param region: the region to use
+    :return: the report
+    '''
 
-##############################
-# Gets the workspaces client #
-##############################
+    # initialize variables
+    client = client_profile
+    region = region
+
+    # If client isn't provided, get the client
+    if not client:
+        client_profile = get_client_profile(client, region)
+
+    # Get the boto3 workspaces client
+    client = get_workspaces_client(client_profile, region)
+
+    # Get all workspaces
+    workspaces = get_workspaces(client)
+
+    # Initialize variables
+    always_on = []
+    auto_stop = []
+    always_on_cost = 0
+    auto_stop_cost = 0
+
+    # Get the cost of each workspace
+    for workspace in workspaces:
+            
+            # If the workspace is always on, add it to the always on list
+            if workspace['RunningMode'] == "ALWAYS_ON":
+                always_on.append(workspace)
+    
+            # If the workspace is auto stop, add it to the auto stop list
+            elif workspace['RunningMode'] == "AUTO_STOP":
+                auto_stop.append(workspace)
+
+    # Get the cost of each workspace
+    for workspace in always_on:
+        if workspace['ComputeTypeName'] == "VALUE":
+            always_on_cost += 23.20
+        elif workspace['ComputeTypeName'] == "STANDARD":
+            always_on_cost += 30.40
+        elif workspace['ComputeTypeName'] == "PERFORMANCE":
+            always_on_cost += 41.60
+        elif workspace['ComputeTypeName'] == "POWER":
+            always_on_cost += 79.20
+        elif workspace['ComputeTypeName'] == "GRAPHICS":
+            always_on_cost += 117.60
+
+    # Get the cost of each workspace
+    for workspace in auto_stop:
+        if workspace['ComputeTypeName'] == "VALUE":
+            auto_stop_cost += (0.18*83) + 8
+        elif workspace['ComputeTypeName'] == "STANDARD":
+            auto_stop_cost += (0.26*83) + 8
+        elif workspace['ComputeTypeName'] == "PERFORMANCE":
+            auto_stop_cost += (0.42*83) + 8
+        elif workspace['ComputeTypeName'] == "POWER":
+            auto_stop_cost += (0.68*83) + 8
+        elif workspace['ComputeTypeName'] == "GRAPHICS":
+            auto_stop_cost += (1.34*83) + 8
+
+    
+    # float to 2 decimal places
+    always_on_cost = "{:.2f}".format(always_on_cost)
+    auto_stop_cost = "{:.2f}".format(auto_stop_cost)
+
+    total_cost = float(always_on_cost) + float(auto_stop_cost)
+
+    # Print the report
+    clear()
+    print("Always On Workspaces: {}".format(len(always_on)))
+    print("Auto Stop Workspaces: {}".format(len(auto_stop)))
+    print("\n")
+    print("Always On Cost: ${}".format(always_on_cost))
+    print("Auto Stop Cost: ${}".format(auto_stop_cost))
+    print("\n")
+    print("Total Workspaces: {}".format(len(workspaces)))
+    print("Total Cost: ${}".format(total_cost))
+    exit()
+
+
 def get_workspaces_client(profile, region):
     """
     Connect to AWS APIs
@@ -24,21 +106,24 @@ def get_workspaces_client(profile, region):
     return boto3.client("workspaces", region_name=region)
 
 
-#####################################
-# Function to execute aws functions #
-#####################################
 def aws_function(_aws_function, **kwargs):
+    '''
+    This function will attempt to run the provided function and return the response
+    If the function fails, it will retry the function until it succeeds
+    :param _aws_function: the function to run
+    :param kwargs: the arguments to pass to the function
+    :return: the response from the function
+    '''
+
     return _aws_function(**kwargs)
 
-##################################
-# function to get all workspaces #
-##################################
+
 def get_workspaces(client):
-    """
-    Returns existing workspaces details
-    :param client: a boto3 workspaces client
-    :return flat_list:  list of workspaces with relevant details
-    """
+    '''
+    This function will get all workspaces in the account
+    :param client: the workspaces client
+    :return: a list of all workspaces
+    '''
 
     # Initialize variable
     _all_workspaces = []
@@ -88,10 +173,14 @@ def get_workspaces(client):
                 throttle = True
     return _all_workspaces
 
-#################################
-# Function to restart workspace #
-#################################
+
 def restart_workspace(client, ws_id):
+    '''
+    This function will restart a workspace
+    :param client: the workspaces client
+    :param ws_id: the workspace id to restart
+    :return: the response from the restart
+    '''
 
     #TODO Create a dynamic switch for cases where users have more than one workspace
     # response = client.reboot_workspaces(
@@ -106,10 +195,13 @@ def restart_workspace(client, ws_id):
 
     return response
 
-############################################################
-# Function to get the client profile to be used in the app #
-############################################################
 def get_client_profile(client_profile, region):
+    '''
+    This function will get the client profile to use
+    :param client_profile: the client profile to use
+    :param region: the region to use
+    :return: the client profile to use
+    '''
 
     # Initialize variable
     client = client_profile
@@ -148,10 +240,13 @@ def get_client_profile(client_profile, region):
                 clear()
     return client
 
-#################################################################
-# function to get all workspaces and print them to the terminal #
-#################################################################
+
 def get_workspaces_list(client):
+    '''
+    This function will get the list of workspaces
+    :param client: the workspaces client
+    :return: the list of workspaces
+    '''
 
     # Get list of workspaces
     workspaces = get_workspaces(client)
@@ -167,10 +262,14 @@ def get_workspaces_list(client):
 
 
 
-###############################
-# Function to search for user #
-###############################
 def get_user(client_profile,region, user_id):
+    '''
+    This function will get the user's workspace details
+    :param client_profile: the client profile to use
+    :param region: the region to use
+    :param user_id: the user id to search for
+    :return: the user's workspace details
+    '''
 
     # initialize variables
     client = client_profile
