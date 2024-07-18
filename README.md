@@ -1,4 +1,11 @@
 # docker-workspaces
 Docker image for workspaces admin tools
 
-Read me will be better when i care enough to add more information into the readme
+install docker add this to your bash profile
+
+workspaces(){
+        docker run --rm -it \
+        -v ~/.aws:/root/.aws \
+        joelhutson/workspaces:dev \
+	$@
+}
